@@ -4,82 +4,89 @@
 
 #define OPTION_CLASS_DEFINITION(TUpper, T)\
 void Option ## TUpper::_bind_methods() {\
-    ClassDB::bind_method(D_METHOD("has_value"), &Option ## TUpper::has_value);\
-    ClassDB::bind_method(D_METHOD("get_value", "default_"), &Option ## TUpper::get_value);\
-    ClassDB::bind_method(D_METHOD("set_value", "value"), &Option ## TUpper::set_value);\
-    ClassDB::bind_method(D_METHOD("empty_value"), &Option ## TUpper::empty_value);\
-    ClassDB::bind_static_method(STR(Option ## TUpper), D_METHOD("new_value", "value"), &Option ## TUpper::new_value);\
-    ClassDB::bind_static_method(STR(Option ## TUpper), D_METHOD("new_empty"), &Option ## TUpper::new_empty);\
+    ClassDB::bind_method(D_METHOD("hasValue"), &Option ## TUpper::hasValue);\
+    ClassDB::bind_method(D_METHOD("getValue", "default_"), &Option ## TUpper::getValue);\
+    ClassDB::bind_method(D_METHOD("setValue", "value"), &Option ## TUpper::setValue);\
+    ClassDB::bind_method(D_METHOD("emptyValue"), &Option ## TUpper::emptyValue);\
+    ClassDB::bind_static_method(STR(Option ## TUpper), D_METHOD("newValue", "value"), &Option ## TUpper::newValue);\
+    ClassDB::bind_static_method(STR(Option ## TUpper), D_METHOD("newEmpty"), &Option ## TUpper::newEmpty);\
 }\
-Option ## TUpper::Option ## TUpper(T value) : o(value) {}\
-Option ## TUpper::Option ## TUpper() : o() {}\
+Option ## TUpper::Option ## TUpper(T value) : o{value} {}\
+Option ## TUpper::Option ## TUpper() : o{} {}\
 \
-constexpr bool Option ## TUpper::has_value() const {\
+bool Option ## TUpper::hasValue() const {\
     return o.has();\
 }\
 \
-constexpr T Option ## TUpper::get_value(T default_) const {\
+T Option ## TUpper::getValue(T default_) const {\
     return o.get(default_);\
 }\
 \
-constexpr void Option ## TUpper::set_value(T value) {\
+void Option ## TUpper::setValue(T value) {\
     o.set(value);\
 }\
 \
-constexpr void Option ## TUpper::empty_value() {\
+void Option ## TUpper::emptyValue() {\
     o.empty();\
 }\
 \
-Ref<Option ## TUpper> Option ## TUpper::new_value(T value) {\
-    Option ## TUpper* o = new Option ## TUpper(value);\
-    return Ref<Option ## TUpper>();\
+Ref<Option ## TUpper> Option ## TUpper::newValue(T value) {\
+    return memnew(Option ## TUpper(value));\
 }\
-Ref<Option ## TUpper> Option ## TUpper::new_empty() {\
+Ref<Option ## TUpper> Option ## TUpper::newEmpty() {\
     Option ## TUpper* o = new Option ## TUpper();\
-    return Ref<Option ## TUpper>();\
+    return memnew(Option ## TUpper());\
 }\
 
-void OptionInt::_bind_methods() { 
-    ClassDB::bind_method("has_value", &OptionInt::has_value); 
-    ClassDB::bind_method("get_value", &OptionInt::get_value); 
-    ClassDB::bind_method("set_value", &OptionInt::set_value); 
-    ClassDB::bind_method("empty_value", &OptionInt::empty_value); 
-    ClassDB::bind_static_method("OptionInt", "new_value", &OptionInt::new_value); 
-    ClassDB::bind_static_method("OptionInt", "new_empty", &OptionInt::new_empty);
+OPTION_CLASS_DEFINITION(Int, int)
+
+#undef OPTION_CLASS_DEFINITION
+
+void ErrorableInt::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("hasValue"), &ErrorableInt::hasValue);
+    ClassDB::bind_method(D_METHOD("getValue", "default_"), &ErrorableInt::getValue);
+    ClassDB::bind_method(D_METHOD("getErrorCode", "default_"), &ErrorableInt::getErrorCode);
+    ClassDB::bind_method(D_METHOD("getErrorMessage", "default_"), &ErrorableInt::getErrorMessage);
+    ClassDB::bind_method(D_METHOD("setValue", "value"), &ErrorableInt::setValue);
+    ClassDB::bind_method(D_METHOD("setError", "errorCode", "errorMessage"), &ErrorableInt::setError);
+    ClassDB::bind_static_method("ErrorableInt", D_METHOD("newValue", "value"), &ErrorableInt::newValue);
+    ClassDB::bind_static_method("ErrorableInt", D_METHOD("newError", "errorCode", "errorMessage"), &ErrorableInt::newError);
 }
 
-OptionInt::OptionInt(int value) : o(value) {}
-OptionInt::OptionInt() : o() {}
+ErrorableInt::ErrorableInt(int value) : e{value} {}
+ErrorableInt::ErrorableInt(DCError::Error error, String errorMessage) : e{error, errorMessage} {}
+ErrorableInt::ErrorableInt() : e{} {}
 
-constexpr bool OptionInt::has_value() const { 
-    return o.has();
+bool ErrorableInt::hasValue() const {
+    return e.hasValue();
 }
 
-constexpr int OptionInt::get_value(int default_) const { 
-    return o.get(default_);
+int ErrorableInt::getValue(int default_) const {
+    return e.getValue(default_);
 }
 
-constexpr void OptionInt::set_value(int value) { 
-    o.set(value);
+DCError::Error ErrorableInt::getErrorCode(DCError::Error default_) const {
+    return e.getErrorCode(default_);
 }
 
-constexpr void OptionInt::empty_value() { 
-    o.empty();
+String ErrorableInt::getErrorMessage(String default_) const {
+    return e.getErrorMessage(default_);
 }
 
-Ref<OptionInt> OptionInt::new_value(int value) { 
-    Ref<OptionInt> r;
-    r.instantiate();
-    r->set_value(value);
-    return r;
+void ErrorableInt::setValue(int value) {
+    e.setValue(value);
 }
 
-Ref<OptionInt> OptionInt::new_empty() { 
-    Ref<OptionInt> r;
-    r.instantiate();
-    r->empty_value();
-    return r;
+void ErrorableInt::setError(DCError::Error errorCode, String errorMessage) {
+    e.setError(errorCode, errorMessage);
+}
+
+Ref<ErrorableInt> ErrorableInt::newValue(int value) {
+    return memnew(ErrorableInt(value));
+}
+
+Ref<ErrorableInt> ErrorableInt::newError(DCError::Error errorCode, String errorMessage) {
+    return memnew(ErrorableInt(errorCode, errorMessage));
 }
 
 #undef STR
-#undef OPTION_CLASS_DEFINITION

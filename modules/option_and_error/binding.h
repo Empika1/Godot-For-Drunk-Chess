@@ -2,6 +2,7 @@
 #define OPTION_AND_ERROR_BINDING_H
 
 #include "core/object/ref_counted.h"
+#include "core/string/ustring.h"
 #include "thirdparty/mine/OptionAndError/option.h"
 #include "thirdparty/mine/OptionAndError/errorable.h"
 #include "modules/drunk_chess_logic/error.h"
@@ -13,46 +14,50 @@ class Option ## TUpper : public RefCounted {\
 \
     Option<T> o;\
 \
-    /*refcounted constructor isnt constexpr :(*/\
+    /*refcounted constructor isnt :(*/\
     Option ## TUpper(T value);\
     Option ## TUpper();\
 \
 protected:\
     static void _bind_methods();\
+\
 public:\
-    constexpr bool has_value() const;\
+    bool hasValue() const;\
+    /*returns value if has, else default*/\
+    T getValue(T default_) const;\
+    void setValue(T value);\
+    void emptyValue();\
 \
-/*returns value if has, else default*/\
-    constexpr T get_value(T default_) const;\
-\
-    constexpr void set_value(T value);\
-\
-    constexpr void empty_value();\
-\
-    static Ref<Option ## TUpper> new_value(T value);\
-    static Ref<Option ## TUpper> new_empty();\
+    static Ref<Option ## TUpper> newValue(T value);\
+    static Ref<Option ## TUpper> newEmpty();\
 };
 
-class OptionInt : public RefCounted { 
-    GDCLASS(OptionInt, RefCounted)
-
-    Option<int> o; 
-
-protected: 
-    static void _bind_methods();
-
-public: 
-    constexpr bool has_value() const; 
-    constexpr int get_value(int default_) const; 
-    constexpr void set_value(int value); 
-    constexpr void empty_value(); 
-    static Ref<OptionInt> new_value(int value); 
-    static Ref<OptionInt> new_empty();
-
-    OptionInt(int value); 
-    OptionInt();
-};
+OPTION_CLASS_DECLARATION(Int, int)
 
 #undef OPTION_CLASS_DECLARATION
+
+class ErrorableInt : public RefCounted {
+    GDCLASS(ErrorableInt, RefCounted)
+
+    Errorable<int, DCError::Error, String, DCError::Error::DC_DEFAULT_ERROR> e;
+
+    ErrorableInt(int value);
+    ErrorableInt(DCError::Error error, String errorMessage = "");
+    ErrorableInt();
+
+protected:
+    static void _bind_methods();
+
+public:
+    bool hasValue() const;
+    int getValue(int default_) const;
+    DCError::Error getErrorCode(DCError::Error default_) const;
+    String getErrorMessage(String default_) const;
+    void setValue(int value);
+    void setError(DCError::Error errorCode, String errorMessage = "");
+
+    static Ref<ErrorableInt> newValue(int value);
+    static Ref<ErrorableInt> newError(DCError::Error errorCode, String errorMessage = "");
+};
 
 #endif

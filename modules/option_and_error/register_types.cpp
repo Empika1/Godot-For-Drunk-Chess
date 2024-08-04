@@ -9,6 +9,7 @@ void initialize_option_and_error_module(ModuleInitializationLevel p_level) {
 		return;
 	}
     GDREGISTER_CLASS(OptionInt);
+    GDREGISTER_CLASS(ErrorableInt);
 }
 
 void uninitialize_option_and_error_module(ModuleInitializationLevel p_level) {
