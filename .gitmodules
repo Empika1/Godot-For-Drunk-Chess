@@ -1,0 +1,6 @@
+[submodule "thirdparty/mine/option_and_error/OptionAndError"]
+	path = thirdparty/mine/option_and_error/OptionAndError
+	url = https://github.com/Empika1/OptionAndError
+[submodule "thirdparty/mine/OptionAndError"]
+	path = thirdparty/mine/OptionAndError
+	url = https://github.com/Empika1/OptionAndError
