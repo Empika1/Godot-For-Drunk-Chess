@@ -1,0 +1,7 @@
+# SCsub
+
+Import('env')
+
+env_summator = env.Clone()
+env_summator.add_source_files(env.modules_sources, "*.cpp") # Add all cpp files to the build
+env_summator.add_source_files(env.modules_sources, "return2/*.cpp") # Add all cpp files to the build
