@@ -31,62 +31,79 @@ void Option ## TUpper::emptyValue() {\
 }\
 \
 Ref<Option ## TUpper> Option ## TUpper::newValue(T value) {\
-    return memnew(Option ## TUpper(value));\
+    Ref<Option ## TUpper> r;\
+    r.instantiate();\
+    new(r.ptr()) Option ## TUpper{value};\
+    return r;\
 }\
 Ref<Option ## TUpper> Option ## TUpper::newEmpty() {\
-    Option ## TUpper* o = new Option ## TUpper();\
-    return memnew(Option ## TUpper());\
+    Ref<Option ## TUpper> r;\
+    r.instantiate();\
+    new(r.ptr()) Option ## TUpper{};\
+    return r;\
 }\
 
 OPTION_CLASS_DEFINITION(Int, int)
+OPTION_CLASS_DEFINITION(RefCounted, Ref<RefCounted>)
 
 #undef OPTION_CLASS_DEFINITION
 
-void ErrorableInt::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("hasValue"), &ErrorableInt::hasValue);
-    ClassDB::bind_method(D_METHOD("getValue", "default_"), &ErrorableInt::getValue);
-    ClassDB::bind_method(D_METHOD("getErrorCode", "default_"), &ErrorableInt::getErrorCode);
-    ClassDB::bind_method(D_METHOD("getErrorMessage", "default_"), &ErrorableInt::getErrorMessage);
-    ClassDB::bind_method(D_METHOD("setValue", "value"), &ErrorableInt::setValue);
-    ClassDB::bind_method(D_METHOD("setError", "errorCode", "errorMessage"), &ErrorableInt::setError);
-    ClassDB::bind_static_method("ErrorableInt", D_METHOD("newValue", "value"), &ErrorableInt::newValue);
-    ClassDB::bind_static_method("ErrorableInt", D_METHOD("newError", "errorCode", "errorMessage"), &ErrorableInt::newError);
-}
+#define ERRORABLE_CLASS_DEFINITION(TUpper, T)\
+void Errorable ## TUpper::_bind_methods() {\
+    ClassDB::bind_method(D_METHOD("hasValue"), &Errorable ## TUpper::hasValue);\
+    ClassDB::bind_method(D_METHOD("getValue", "default_"), &Errorable ## TUpper::getValue);\
+    ClassDB::bind_method(D_METHOD("getErrorCode", "default_"), &Errorable ## TUpper::getErrorCode);\
+    ClassDB::bind_method(D_METHOD("getErrorMessage", "default_"), &Errorable ## TUpper::getErrorMessage);\
+    ClassDB::bind_method(D_METHOD("setValue", "value"), &Errorable ## TUpper::setValue);\
+    ClassDB::bind_method(D_METHOD("setError", "errorCode", "errorMessage"), &Errorable ## TUpper::setError);\
+    ClassDB::bind_static_method(STR(Errorable ## TUpper), D_METHOD("newValue", "value"), &Errorable ## TUpper::newValue);\
+    ClassDB::bind_static_method(STR(Errorable ## TUpper), D_METHOD("newError", "errorCode", "errorMessage"), &Errorable ## TUpper::newError);\
+}\
+\
+Errorable ## TUpper::Errorable ## TUpper(T value) : e{value} {}\
+Errorable ## TUpper::Errorable ## TUpper(DCError::Error error, String errorMessage) : e{error, errorMessage} {}\
+Errorable ## TUpper::Errorable ## TUpper() : e{} {}\
+\
+bool Errorable ## TUpper::hasValue() const {\
+    return e.hasValue();\
+}\
+\
+T Errorable ## TUpper::getValue(T default_) const {\
+    return e.getValue(default_);\
+}\
+\
+DCError::Error Errorable ## TUpper::getErrorCode(DCError::Error default_) const {\
+    return e.getErrorCode(default_);\
+}\
+\
+String Errorable ## TUpper::getErrorMessage(String default_) const {\
+    return e.getErrorMessage(default_);\
+}\
+\
+void Errorable ## TUpper::setValue(T value) {\
+    e.setValue(value);\
+}\
+\
+void Errorable ## TUpper::setError(DCError::Error errorCode, String errorMessage) {\
+    e.setError(errorCode, errorMessage);\
+}\
+\
+Ref<Errorable ## TUpper> Errorable ## TUpper::newValue(T value) {\
+    Ref<Errorable ## TUpper> r;\
+    r.instantiate();\
+    new(r.ptr()) Errorable ## TUpper{value};\
+    return r;\
+}\
+\
+Ref<Errorable ## TUpper> Errorable ## TUpper::newError(DCError::Error errorCode, String errorMessage) {\
+    Ref<Errorable ## TUpper> r;\
+    r.instantiate();\
+    new(r.ptr()) Errorable ## TUpper{errorCode, errorMessage};\
+    return r;\
+}\
 
-ErrorableInt::ErrorableInt(int value) : e{value} {}
-ErrorableInt::ErrorableInt(DCError::Error error, String errorMessage) : e{error, errorMessage} {}
-ErrorableInt::ErrorableInt() : e{} {}
+ERRORABLE_CLASS_DEFINITION(Int, int)
 
-bool ErrorableInt::hasValue() const {
-    return e.hasValue();
-}
-
-int ErrorableInt::getValue(int default_) const {
-    return e.getValue(default_);
-}
-
-DCError::Error ErrorableInt::getErrorCode(DCError::Error default_) const {
-    return e.getErrorCode(default_);
-}
-
-String ErrorableInt::getErrorMessage(String default_) const {
-    return e.getErrorMessage(default_);
-}
-
-void ErrorableInt::setValue(int value) {
-    e.setValue(value);
-}
-
-void ErrorableInt::setError(DCError::Error errorCode, String errorMessage) {
-    e.setError(errorCode, errorMessage);
-}
-
-Ref<ErrorableInt> ErrorableInt::newValue(int value) {
-    return memnew(ErrorableInt(value));
-}
-
-Ref<ErrorableInt> ErrorableInt::newError(DCError::Error errorCode, String errorMessage) {
-    return memnew(ErrorableInt(errorCode, errorMessage));
-}
+#undef ERRORABLE_CLASS_DEFINITION
 
 #undef STR

@@ -4,4 +4,5 @@ Import('env')
 
 env_dclogic = env.Clone()
 env_dclogic.add_source_files(env.modules_sources, "*.cpp") # Add all cpp files to the build
-#env_dclogic.add_source_files(env.modules_sources, "return2/*.cpp") # Add all cpp files to the build
+env_dclogic.add_source_files(env.modules_sources, "DrunkChessLogic/unity.cpp") # Add DrunkChessLogic unity build file. This is not how you're supposed to handle a library.
+env_dclogic.Append(CCFLAGS=['/std:c++20'])

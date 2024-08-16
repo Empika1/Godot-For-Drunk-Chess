@@ -4,3 +4,6 @@
 [submodule "thirdparty/mine/OptionAndError"]
 	path = thirdparty/mine/OptionAndError
 	url = https://github.com/Empika1/OptionAndError
+[submodule "modules/drunk_chess_logic/DrunkChessLogic"]
+	path = modules/drunk_chess_logic/DrunkChessLogic
+	url = https://github.com/Empika1/DrunkChessLogic
