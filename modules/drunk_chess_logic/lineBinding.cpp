@@ -118,7 +118,7 @@ bool Ray::isOnHalfPlane(Ref<Point> const p, bool const inclusive) const {
     return DCM::isOnHalfPlaneOfRay(r, p->p, inclusive);
 }
 
-Ref<Line> Ray::newRay(Ref<Point> p1, Ref<Point> p2) {
+Ref<Ray> Ray::newRay(Ref<Point> p1, Ref<Point> p2) {
     Ref<Ray> r_;
     r_.instantiate();
     r_->r = DCM::Ray{p1->p, p2->p};
@@ -162,7 +162,7 @@ bool LineSegment::isOnPlaneSegment(Ref<Point> const p, bool const inclusive) con
     return DCM::isOnPlaneSegmentOfLineSegment(l, p->p, inclusive);
 }
 
-Ref<Line> LineSegment::newLineSegment(Ref<Point> p1, Ref<Point> p2) {
+Ref<LineSegment> LineSegment::newLineSegment(Ref<Point> p1, Ref<Point> p2) {
     Ref<LineSegment> r;
     r.instantiate();
     r->l = DCM::LineSegment{p1->p, p2->p};

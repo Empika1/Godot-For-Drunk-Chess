@@ -61,7 +61,7 @@ public:
 
     bool isOnHalfPlane(Ref<Point> const p, bool const inclusive = true) const;
 
-    static Ref<Line> newRay(Ref<Point> p1, Ref<Point> p2);
+    static Ref<Ray> newRay(Ref<Point> p1, Ref<Point> p2);
     
     Ray();
 
@@ -85,7 +85,7 @@ public:
 
     bool isOnPlaneSegment(Ref<Point> const p, bool const inclusive = true) const;
 
-    static Ref<Line> newLineSegment(Ref<Point> p1, Ref<Point> p2);
+    static Ref<LineSegment> newLineSegment(Ref<Point> p1, Ref<Point> p2);
     
     LineSegment();
 
