@@ -40,11 +40,9 @@ public:
 
     String toString() const;
 
-    static Ref<Point> newPoint(DCM::intD x, DCM::intD y);
+    static Ref<Point> newPoint(DCM::intD const x, DCM::intD const y);
 
     Point();
-
-    Point(DCM::Point p_);
 };
 
 #endif

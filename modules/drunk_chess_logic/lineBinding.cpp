@@ -1,5 +1,6 @@
 #include <string>
 #include "lineBinding.h"
+#include "returnRef.h"
 
 void Line::_bind_methods() {
     ClassDB::bind_method(D_METHOD("getP1"), &Line::getP1);
@@ -19,17 +20,11 @@ void Line::_bind_methods() {
 }
 
 Ref<Point> Line::getP1() const {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = l.p1;
-    return r;
+    RETURN_REF(Point, p, l.p1)
 }
 
 Ref<Point> Line::getP2() const {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = l.p2;
-    return r;
+    RETURN_REF(Point, p, l.p2)
 }
 
 String Line::toString() const {
@@ -49,10 +44,7 @@ DCM::intD Line::rasterizationNumber(Ref<Point> const p) const {
 }
 
 Ref<Point> Line::nthPointOnRasterization(DCM::intD const n) const {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = DCM::nthPointOnRasterization(l, n);
-    return r;
+    RETURN_REF(Point, p, DCM::nthPointOnRasterization(l, n))
 }
 
 bool Line::isOnRasterization(Ref<Point> const p) const {
@@ -60,30 +52,21 @@ bool Line::isOnRasterization(Ref<Point> const p) const {
 }
 
 Ref<Point> Line::nextPointOnRasterization(Ref<Point> const prev) const {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = DCM::nextPointOnRasterization(l, prev->p);
-    return r;
+    RETURN_REF(Point, p, DCM::nextPointOnRasterization(l, prev->p))
 }
 
 Ref<Point> Line::previousPointOnRasterization(Ref<Point> const next) const {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = DCM::previousPointOnRasterization(l, next->p);
-    return r;
+    RETURN_REF(Point, p, DCM::previousPointOnRasterization(l, next->p))
 }
 
-Ref<Line> Line::newLine(Ref<Point> p1, Ref<Point> p2) {
-    Ref<Line> r;
-    r.instantiate();
-    r->l = DCM::Line{p1->p, p2->p};
-    return r;
+Ref<Line> Line::newLine(Ref<Point> const p1, Ref<Point> const p2) {
+    RETURN_REF(Line, l, (DCM::Line{p1->p, p2->p}))
 }
 
 //chosen to avoid any division by 0 with a default line
 Line::Line() : l{DCM::Point{0, 0}, DCM::Point{1, 0}} {}
 
-Line::Line(Ref<Point> p1, Ref<Point> p2) : l{p1->p, p2->p} {}
+Line::Line(Ref<Point> const p1, Ref<Point> const p2) : l{p1->p, p2->p} {}
 
 void Ray::_bind_methods() {
     ClassDB::bind_method(D_METHOD("getP1"), &Ray::getP1);
@@ -97,17 +80,11 @@ void Ray::_bind_methods() {
 }
 
 Ref<Point> Ray::getP1() const {
-    Ref<Point> r_;
-    r_.instantiate();
-    r_->p = r.p1;
-    return r_;
+    RETURN_REF(Point, p, r.p1)
 }
 
 Ref<Point> Ray::getP2() const {
-    Ref<Point> r_;
-    r_.instantiate();
-    r_->p = r.p2;
-    return r_;
+    RETURN_REF(Point, p, r.p2)
 }
 
 String Ray::toString() const {
@@ -118,16 +95,13 @@ bool Ray::isOnHalfPlane(Ref<Point> const p, bool const inclusive) const {
     return DCM::isOnHalfPlaneOfRay(r, p->p, inclusive);
 }
 
-Ref<Ray> Ray::newRay(Ref<Point> p1, Ref<Point> p2) {
-    Ref<Ray> r_;
-    r_.instantiate();
-    r_->r = DCM::Ray{p1->p, p2->p};
-    return r_;
+Ref<Ray> Ray::newRay(Ref<Point> const p1, Ref<Point> const p2) {
+    RETURN_REF(Ray, r, (DCM::Ray{p1->p, p2->p}))
 }
 
 Ray::Ray() : r{DCM::Point{0, 0}, DCM::Point{1, 0}} {}
 
-Ray::Ray(Ref<Point> p1, Ref<Point> p2) : r{p1->p, p2->p} {}
+Ray::Ray(Ref<Point> const p1, Ref<Point> const p2) : r{p1->p, p2->p} {}
 
 void LineSegment::_bind_methods() {
     ClassDB::bind_method(D_METHOD("getP1"), &LineSegment::getP1);
@@ -141,17 +115,11 @@ void LineSegment::_bind_methods() {
 }
 
 Ref<Point> LineSegment::getP1() const {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = l.p1;
-    return r;
+    RETURN_REF(Point, p, l.p1)
 }
 
 Ref<Point> LineSegment::getP2() const {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = l.p2;
-    return r;
+    RETURN_REF(Point, p, l.p2)
 }
 
 String LineSegment::toString() const {
@@ -162,13 +130,10 @@ bool LineSegment::isOnPlaneSegment(Ref<Point> const p, bool const inclusive) con
     return DCM::isOnPlaneSegmentOfLineSegment(l, p->p, inclusive);
 }
 
-Ref<LineSegment> LineSegment::newLineSegment(Ref<Point> p1, Ref<Point> p2) {
-    Ref<LineSegment> r;
-    r.instantiate();
-    r->l = DCM::LineSegment{p1->p, p2->p};
-    return r;
+Ref<LineSegment> LineSegment::newLineSegment(Ref<Point> const p1, Ref<Point> const p2) {
+    RETURN_REF(LineSegment, l, (DCM::LineSegment{p1->p, p2->p}))
 }
 
 LineSegment::LineSegment() : l{DCM::Point{0, 0}, DCM::Point{1, 0}} {}
 
-LineSegment::LineSegment(Ref<Point> p1, Ref<Point> p2) : l{p1->p, p2->p} {}
+LineSegment::LineSegment(Ref<Point> const p1, Ref<Point> const p2) : l{p1->p, p2->p} {}

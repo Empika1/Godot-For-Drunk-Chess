@@ -37,7 +37,7 @@ public:
 
     Ref<Point> previousPointOnRasterization(Ref<Point> const next) const;
 
-    static Ref<Line> newLine(Ref<Point> p1, Ref<Point> p2);
+    static Ref<Line> newLine(Ref<Point> const p1, Ref<Point> const p2);
     
     Line();
 
@@ -61,11 +61,11 @@ public:
 
     bool isOnHalfPlane(Ref<Point> const p, bool const inclusive = true) const;
 
-    static Ref<Ray> newRay(Ref<Point> p1, Ref<Point> p2);
+    static Ref<Ray> newRay(Ref<Point> const p1, Ref<Point> const p2);
     
     Ray();
 
-    Ray(Ref<Point> p1, Ref<Point> p2);
+    Ray(Ref<Point> const p1, Ref<Point> const p2);
 };
 
 class LineSegment : public RefCounted {
@@ -85,11 +85,11 @@ public:
 
     bool isOnPlaneSegment(Ref<Point> const p, bool const inclusive = true) const;
 
-    static Ref<LineSegment> newLineSegment(Ref<Point> p1, Ref<Point> p2);
+    static Ref<LineSegment> newLineSegment(Ref<Point> const p1, Ref<Point> const p2);
     
     LineSegment();
 
-    LineSegment(Ref<Point> p1, Ref<Point> p2);
+    LineSegment(Ref<Point> const p1, Ref<Point> const p2);
 };
 
 #endif

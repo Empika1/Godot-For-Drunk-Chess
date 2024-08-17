@@ -1,5 +1,6 @@
 #include <string>
 #include "pointBinding.h"
+#include "returnRef.h"
 
 namespace DCM = DrunkChessMath;
 
@@ -30,17 +31,11 @@ DCM::intD Point::getY() const {
 }
 
 Ref<Point> Point::add(Ref<Point> const other) const {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = p + other->p;
-    return r;
+    RETURN_REF(Point, p, p + other->p)
 }
 
 Ref<Point> Point::subtract(Ref<Point> const other) const {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = p - other->p;
-    return r;
+    RETURN_REF(Point, p, p - other->p)
 }
 
 DCM::intD Point::dot(Ref<Point> const other) const {
@@ -75,13 +70,8 @@ String Point::toString() const {
     return String{DCM::toString(p).c_str()};
 }
 
-Ref<Point> Point::newPoint(DCM::intD x, DCM::intD y) {
-    Ref<Point> r;
-    r.instantiate();
-    r->p = DCM::Point{x, y};
-    return r;
+Ref<Point> Point::newPoint(DCM::intD const x, DCM::intD const y) {
+    RETURN_REF(Point, p, (DCM::Point{x, y}))
 }
 
 Point::Point() : p{0, 0} {}
-
-Point::Point(DCM::Point p_) : p{p_} {}
